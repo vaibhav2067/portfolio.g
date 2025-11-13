@@ -1,497 +1,221 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Portfolio Dashboard</title>
-    <link rel="stylesheet" href="style.css">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Vaibhav Srivastava — Portfolio Dashboard</title>
+
+  <!-- Fonts & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- Top Navigation Bar -->
-    <nav class="navbar">
-        <div class="nav-left">
-            <div class="logo">
-                <svg class="logo-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-                    <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-                        d="M9 12h6m-9 7a2 2 0 0 1-2-2v-4l-1-1l1-1V7a2 2 0 0 1 2-2m12 14a2 2 0 0 0 2-2v-4l1-1l-1-1V7a2 2 0 0 0-2-2"/>
-                </svg>
-                <span>Portfolio Dashboard</span>
-            </div>
-        </div>
-        <div class="nav-right">
-            <div class="profile-dropdown">
-                <div class="profile-icon">
-                    <svg class="profile-svg" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14">
-                        <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" 
-                            d="M13.5 10.5v2a1 1 0 0 1-1 1h-2m0-13h2a1 1 0 0 1 1 1v2m-13 0v-2a1 1 0 0 1 1-1h2m0 13h-2a1 1 0 0 1-1-1v-2m6.5-4a2 2 0 1 0 0-4a2 2 0 0 0 0 4m3.803 4.5a3.994 3.994 0 0 0-7.606 0z" stroke-width="1"/>
-                    </svg>
-                </div>
-                <div class="dropdown-menu">
-                    <a href="#" class="dropdown-item" data-action="profile">
-                        <i class="fas fa-user"></i>Profile
-                    </a>
-                    <a href="#" class="dropdown-item" data-action="theme">
-                        <i class="fas fa-moon"></i>Theme
-                        <span class="theme-status">Light</span>
-                    </a>
-                    <a href="#" class="dropdown-item" data-action="exit">
-                        <i class="fas fa-sign-out-alt"></i>Exit
-                    </a>
-                </div>
-            </div>
-        </div>
-    </nav>
+  <!-- Top Navigation Bar -->
+  <nav class="navbar" role="navigation" aria-label="Top Navigation">
+    <div class="nav-left">
+      <button id="mobileMenuBtn" class="icon-btn mobile-only" aria-label="Toggle menu">
+        <i class="fas fa-bars"></i>
+      </button>
 
-    <!-- Main Container -->
-    <div class="container">
-        <!-- Collapsible Sidebar -->
-        <aside class="sidebar">
-            <ul class="sidebar-menu">
-                <li class="menu-item active">
-                    <i class="fas fa-home"></i>
-                    <span>Dashboard</span>
-                </li>
-                <li class="menu-item">
-                    <i class="fas fa-laptop-code"></i>
-                    <span>Skills & Technologies</span>
-                </li>
-                <li class="menu-item">
-                    <i class="fas fa-briefcase"></i>
-                    <span>Projects Portfolio</span>
-                </li>
-                <li class="menu-item">
-                    <i class="fas fa-history"></i>
-                    <span>Work Experience</span>
-                </li>
-                <li class="menu-item">
-                    <i class="fas fa-envelope"></i>
-                    <span>Contact Information</span>
-                </li>
+      <div class="logo" aria-hidden="true">
+        <svg class="logo-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+          <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-9 7a2 2 0 0 1-2-2v-4l-1-1l1-1V7a2 2 0 0 1 2-2m12 14a2 2 0 0 0 2-2v-4l1-1l-1-1V7a2 2 0 0 0-2-2"/>
+        </svg>
+        <div class="brand">
+          <span class="brand-title">Vaibhav — Portfolio</span>
+          <span class="brand-sub">Dashboard</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="nav-right">
+      <div class="search-wrap">
+        <input id="globalSearch" class="search-input" type="search" placeholder="Search projects, skills..." aria-label="Search">
+        <i class="fas fa-search search-icon" aria-hidden="true"></i>
+      </div>
+
+      <div class="profile-dropdown" tabindex="0" aria-haspopup="true" aria-expanded="false">
+        <button class="profile-btn" id="profileBtn" aria-label="Open profile menu">
+          <div class="profile-avatar-mini" aria-hidden="true"><i class="fas fa-user"></i></div>
+          <span class="profile-name">Vaibhav</span>
+          <i class="fas fa-chevron-down small"></i>
+        </button>
+
+        <div class="dropdown-menu" role="menu" aria-label="Profile menu">
+          <button class="dropdown-item" data-action="profile" role="menuitem"><i class="fas fa-user-circle"></i> View Profile</button>
+          <button class="dropdown-item" id="themeToggle" data-action="theme" role="menuitem"><i class="fas fa-moon"></i> Toggle Theme <span class="theme-pill">Light</span></button>
+          <a class="dropdown-item" href="#" data-action="contact" role="menuitem"><i class="fas fa-envelope"></i> Contact</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- App Container -->
+  <div class="app-wrap">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar" aria-label="Main navigation">
+      <ul class="sidebar-menu" role="menu">
+        <li class="menu-item active" role="menuitem" data-section="dashboard" tabindex="0" title="Dashboard">
+          <i class="fas fa-home"></i><span class="menu-label">Dashboard</span>
+        </li>
+        <li class="menu-item" role="menuitem" data-section="skills" tabindex="0" title="Skills & Technologies">
+          <i class="fas fa-laptop-code"></i><span class="menu-label">Skills</span>
+        </li>
+        <li class="menu-item" role="menuitem" data-section="projects" tabindex="0" title="Projects Portfolio">
+          <i class="fas fa-briefcase"></i><span class="menu-label">Projects</span>
+        </li>
+        <li class="menu-item" role="menuitem" data-section="experience" tabindex="0" title="Work Experience">
+          <i class="fas fa-history"></i><span class="menu-label">Experience</span>
+        </li>
+        <li class="menu-item" role="menuitem" data-section="contact" tabindex="0" title="Contact Information">
+          <i class="fas fa-envelope"></i><span class="menu-label">Contact</span>
+        </li>
+      </ul>
+
+      <div class="sidebar-footer">
+        <button id="collapseBtn" class="icon-btn" aria-label="Collapse sidebar" title="Collapse sidebar">
+          <i class="fas fa-chevron-left"></i>
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main" id="mainContent" role="main">
+      <!-- Welcome -->
+      <section class="hero">
+        <div class="hero-text">
+          <h1>Hi — I'm Vaibhav 👋</h1>
+          <p>Computer Science graduate focused on full-stack development, data visualization and intuitive UX.</p>
+          <div class="hero-cta">
+            <a class="btn btn-primary" href="#projects"><i class="fas fa-rocket"></i> Explore Projects</a>
+            <a class="btn btn-outline" href="#contact"><i class="fas fa-download"></i> Download Resume</a>
+          </div>
+        </div>
+        <div class="hero-stats" aria-hidden="true">
+          <div class="stat-card">
+            <div class="stat-value" data-target="15">0</div>
+            <div class="stat-label">Projects</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" data-target="24">0</div>
+            <div class="stat-label">GitHub Repos</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" data-target="327">0</div>
+            <div class="stat-label">Commits</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Metrics & Cards -->
+      <section class="grid two-col">
+        <div class="card glass-card" id="activityCard" aria-labelledby="activityTitle">
+          <div class="card-header">
+            <h3 id="activityTitle"><i class="fab fa-github"></i> Recent GitHub Activity</h3>
+            <div class="card-actions">
+              <button class="icon-btn small" id="refreshActivity" title="Refresh activity" aria-label="Refresh activity"><i class="fas fa-sync-alt"></i></button>
+            </div>
+          </div>
+          <div class="card-body">
+            <ul class="activity-list" id="activityList">
+              <li class="activity">
+                <div class="act-icon"><i class="fas fa-code-commit"></i></div>
+                <div class="act-body">
+                  <div class="act-text">Pushed 3 commits to <strong>portfolio-dashboard</strong></div>
+                  <div class="act-meta">2 hours ago</div>
+                </div>
+              </li>
+              <li class="activity">
+                <div class="act-icon"><i class="fas fa-code-branch"></i></div>
+                <div class="act-body">
+                  <div class="act-text">Created branch <strong>feature/dark-mode</strong></div>
+                  <div class="act-meta">1 day ago</div>
+                </div>
+              </li>
+              <li class="activity">
+                <div class="act-icon"><i class="fas fa-star"></i></div>
+                <div class="act-body">
+                  <div class="act-text">Starred <strong>facebook/react</strong></div>
+                  <div class="act-meta">3 days ago</div>
+                </div>
+              </li>
             </ul>
-            <div class="sidebar-toggle">
-                <i class="fas fa-chevron-left"></i>
-            </div>
-        </aside>
-
-        <!-- Main Content Area -->
-        <main class="main-content">
-            <!-- Welcome Banner -->
-            <section class="welcome-banner">
-                <h1>Welcome to My Portfolio! 👋</h1>
-                <p>Recent Computer Science graduate passionate about full-stack development, data visualization, and creating impactful digital experiences.</p>
-            </section>
-
-            <!-- Key Metrics Bar -->
-            <section class="metrics-grid">
-                <div class="metric-card">
-                    <div class="metric-icon">
-                        <i class="fas fa-folder-open"></i>
-                    </div>
-                    <div class="metric-info">
-                        <h3>15</h3>
-                        <p>Projects Completed</p>
-                    </div>
-                </div>
-                <div class="metric-card">
-                    <div class="metric-icon">
-                        <i class="fab fa-github"></i>
-                    </div>
-                    <div class="metric-info">
-                        <h3>24</h3>
-                        <p>GitHub Repos</p>
-                    </div>
-                </div>
-                <div class="metric-card">
-                    <div class="metric-icon">
-                        <i class="fas fa-code-branch"></i>
-                    </div>
-                    <div class="metric-info">
-                        <h3>327</h3>
-                        <p>Total Commits</p>
-                    </div>
-                </div>
-                <div class="metric-card">
-                    <div class="metric-icon">
-                        <i class="fas fa-tools"></i>
-                    </div>
-                    <div class="metric-info">
-                        <h3>12+</h3>
-                        <p>Technologies</p>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Two Column Cards -->
-            <section class="cards-grid">
-                <!-- GitHub Activity Card -->
-                <div class="card">
-                    <div class="card-header">
-                        <h3><i class="fab fa-github"></i> Recent GitHub Activity</h3>
-                        <button class="refresh-btn">
-                            <i class="fas fa-sync-alt"></i>
-                        </button>
-                    </div>
-                    <div class="card-content">
-                        <div class="activity-item">
-                            <div class="activity-icon pushed">
-                                <i class="fas fa-code-commit"></i>
-                            </div>
-                            <div class="activity-details">
-                                <p>Pushed 3 commits to <strong>portfolio-dashboard</strong></p>
-                                <span class="activity-time">2 hours ago</span>
-                            </div>
-                        </div>
-                        <div class="activity-item">
-                            <div class="activity-icon created">
-                                <i class="fas fa-code-branch"></i>
-                            </div>
-                            <div class="activity-details">
-                                <p>Created branch <strong>feature/dark-mode</strong></p>
-                                <span class="activity-time">1 day ago</span>
-                            </div>
-                        </div>
-                        <div class="activity-item">
-                            <div class="activity-icon starred">
-                                <i class="fas fa-star"></i>
-                            </div>
-                            <div class="activity-details">
-                                <p>Starred <strong>facebook/react</strong></p>
-                                <span class="activity-time">3 days ago</span>
-                            </div>
-                        </div>
-                        <div class="activity-item">
-                            <div class="activity-icon issue">
-                                <i class="fas fa-exclamation-circle"></i>
-                            </div>
-                            <div class="activity-details">
-                                <p>Opened issue in <strong>ecommerce-app</strong></p>
-                                <span class="activity-time">1 week ago</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Portfolio Analytics Card -->
-                <div class="card">
-                    <div class="card-header">
-                        <h3><i class="fas fa-chart-bar"></i> Portfolio Analytics</h3>
-                        <span class="live-badge">Live</span>
-                    </div>
-                    <div class="card-content">
-                        <div class="analytics-item">
-                            <div class="analytics-metric">
-                                <span class="metric-value">47</span>
-                                <span class="metric-label">Total Visitors</span>
-                            </div>
-                        </div>
-                        <div class="analytics-stats">
-                            <div class="stat">
-                                <span class="stat-value">12</span>
-                                <span class="stat-label">Projects Viewed</span>
-                            </div>
-                            <div class="stat">
-                                <span class="stat-value">8</span>
-                                <span class="stat-label">Resume Downloads</span>
-                            </div>
-                            <div class="stat">
-                                <span class="stat-value">15</span>
-                                <span class="stat-label">Skills Section Views</span>
-                            </div>
-                        </div>
-                        <div class="recent-activity">
-                            <h4>Recent Interactions</h4>
-                            <div class="interaction-item">
-                                <span>Now</span>
-                                <p>User viewing Projects section</p>
-                            </div>
-                            <div class="interaction-item">
-                                <span>5 min ago</span>
-                                <p>Downloaded resume.pdf</p>
-                            </div>
-                            <div class="interaction-item">
-                                <span>12 min ago</span>
-                                <p>Viewed E-commerce Project</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Featured Project Section -->
-            <section class="featured-project">
-                <div class="card">
-                    <div class="card-header">
-                        <h3><i class="fas fa-star"></i> Featured Project</h3>
-                    </div>
-                    <div class="card-content">
-                        <div class="project-showcase">
-                            <div class="project-image">
-                                <div class="image-placeholder">
-                                    <i class="fas fa-laptop-code"></i>
-                                    <span>Project Screenshot</span>
-                                </div>
-                            </div>
-                            <div class="project-details">
-                                <h4>E-Commerce Dashboard</h4>
-                                <p>A full-stack e-commerce platform with real-time analytics, inventory management, and customer insights dashboard.</p>
-                                <div class="tech-stack">
-                                    <span class="tech-tag">React</span>
-                                    <span class="tech-tag">Node.js</span>
-                                    <span class="tech-tag">MongoDB</span>
-                                    <span class="tech-tag">Express</span>
-                                </div>
-                                <div class="project-actions">
-                                    <button class="btn btn-primary">
-                                        <i class="fab fa-github"></i> View Code
-                                    </button>
-                                    <button class="btn btn-secondary">
-                                        <i class="fas fa-external-link-alt"></i> Live Demo
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Footer -->
-            <footer class="footer">
-                <div class="social-links">
-                    <a href="#" class="social-link">
-                        <i class="fab fa-github"></i>
-                    </a>
-                    <a href="#" class="social-link">
-                        <i class="fab fa-linkedin"></i>
-                    </a>
-                    <a href="#" class="social-link">
-                        <i class="fab fa-twitter"></i>
-                    </a>
-                    <a href="#" class="social-link">
-                        <i class="fab fa-dev"></i>
-                    </a>
-                    <a href="#" class="social-link">
-                        <i class="fas fa-envelope"></i>
-                    </a>
-                </div>
-                <p class="copyright">&copy; 2024 My Portfolio Dashboard. All rights reserved.</p>
-            </footer>
-        </main>
-    </div>
-
-    <!-- Profile/Resume Page (Hidden by default) -->
-    <div id="profilePage" class="profile-page hidden">
-        <div class="profile-header">
-            <button class="back-to-dashboard">
-                <i class="fas fa-arrow-left"></i>
-                Back to Dashboard
-            </button>
-            <h1>Professional Profile</h1>
-            <button class="download-resume">
-                <i class="fas fa-download"></i>
-                Download PDF
-            </button>
+          </div>
         </div>
 
-        <div class="resume-container">
-            <!-- Left Column -->
-            <div class="resume-left">
-                <!-- Header Section -->
-                <section class="resume-header">
-                    <div class="profile-avatar">
-                        <div class="avatar-placeholder">
-                            <i class="fas fa-user"></i>
-                        </div>
-                    </div>
-                    <div class="header-content">
-                        <h1>Vaibhav Srivastava</h1>
-                        <p class="professional-title">Computer Science Engineering Student</p>
-                        <div class="contact-info">
-                            <div class="contact-item">
-                                <i class="fas fa-envelope"></i>
-                                <span>vaibhav06734@gmail.com</span>
-                            </div>
-                            <div class="contact-item">
-                                <i class="fas fa-phone"></i>
-                                <span>+91 8960193862</span>
-                            </div>
-                            <div class="contact-links">
-                                <a href="#" class="social-link">
-                                    <i class="fab fa-linkedin"></i>
-                                </a>
-                                <a href="#" class="social-link">
-                                    <i class="fab fa-github"></i>
-                                </a>
-                                <a href="#" class="social-link">
-                                    <i class="fas fa-globe"></i>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- Education Section -->
-                <section class="resume-section">
-                    <h2 class="section-title">
-                        <i class="fas fa-graduation-cap"></i>
-                        Education
-                    </h2>
-                    <div class="education-item">
-                        <h3>B.Tech in Computer Science Engineering</h3>
-                        <p class="institution">Galgotias University</p>
-                        <p class="duration">2021 - 2025</p>
-                        <p class="grade">CGPA: 8.22</p>
-                    </div>
-                    <div class="education-item">
-                        <h3>12th Grade</h3>
-                        <p class="institution">St. Mary's Senior Secondary School, Banda (CBSE)</p>
-                        <p class="duration">2020 - 2021</p>
-                        <p class="grade">Percentage: 90%</p>
-                    </div>
-                    <div class="education-item">
-                        <h3>10th Grade</h3>
-                        <p class="institution">St. Mary's Senior Secondary School, Banda (CBSE)</p>
-                        <p class="duration">2018 - 2019</p>
-                        <p class="grade">Percentage: 87.6%</p>
-                    </div>
-                </section>
-
-                <!-- Skills Section -->
-                <section class="resume-section">
-                    <h2 class="section-title">
-                        <i class="fas fa-tools"></i>
-                        Skills
-                    </h2>
-                    <div class="skills-grid">
-                        <div class="skill-category">
-                            <h4>Programming</h4>
-                            <div class="skill-tags">
-                                <span class="skill-tag">Python</span>
-                                <span class="skill-tag">JavaScript</span>
-                                <span class="skill-tag">HTML</span>
-                                <span class="skill-tag">CSS</span>
-                                <span class="skill-tag">SQL</span>
-                            </div>
-                        </div>
-                        <div class="skill-category">
-                            <h4>Data Analysis</h4>
-                            <div class="skill-tags">
-                                <span class="skill-tag">Regression</span>
-                                <span class="skill-tag">Statistical Modeling</span>
-                                <span class="skill-tag">R</span>
-                                <span class="skill-tag">Excel</span>
-                            </div>
-                        </div>
-                        <div class="skill-category">
-                            <h4>Tools & Technologies</h4>
-                            <div class="skill-tags">
-                                <span class="skill-tag">Git</span>
-                                <span class="skill-tag">GitHub</span>
-                                <span class="skill-tag">VS Code</span>
-                                <span class="skill-tag">Tableau</span>
-                            </div>
-                        </div>
-                        <div class="skill-category">
-                            <h4>Machine Learning</h4>
-                            <div class="skill-tags">
-                                <span class="skill-tag">TensorFlow</span>
-                                <span class="skill-tag">Scikit-learn</span>
-                            </div>
-                        </div>
-                        <div class="skill-category">
-                            <h4>Frameworks</h4>
-                            <div class="skill-tags">
-                                <span class="skill-tag">Flask</span>
-                                <span class="skill-tag">Node.js</span>
-                            </div>
-                        </div>
-                    </div>
-                </section>
+        <div class="card glass-card" id="analyticsCard" aria-labelledby="analyticsTitle">
+          <div class="card-header">
+            <h3 id="analyticsTitle"><i class="fas fa-chart-line"></i> Portfolio Analytics <span class="live-pill">Live</span></h3>
+          </div>
+          <div class="card-body analytics">
+            <div class="analytics-top">
+              <div class="big-number"><span id="visitors">47</span><small>Visitors</small></div>
+              <div class="mini-stats">
+                <div><strong id="projectsViewed">12</strong><div>Projects Viewed</div></div>
+                <div><strong id="resumeDownloads">8</strong><div>Resume Downloads</div></div>
+                <div><strong id="skillsViews">15</strong><div>Skills Views</div></div>
+              </div>
             </div>
 
-            <!-- Right Column -->
-            <div class="resume-right">
-                <!-- Experience Section -->
-                <section class="resume-section">
-                    <h2 class="section-title">
-                        <i class="fas fa-briefcase"></i>
-                        Experience
-                    </h2>
-                    <div class="experience-item">
-                        <h3>Python Intern</h3>
-                        <p class="company">Infinity Robotics</p>
-                        <ul class="experience-details">
-                            <li>Conducted requirement analysis and designed intuitive user interfaces for mobile applications</li>
-                            <li>Developed technical documentation and high-fidelity prototypes for team alignment</li>
-                            <li>Collaborated with developers for seamless integration of application design</li>
-                        </ul>
-                    </div>
-                    <div class="experience-item">
-                        <h3>UI/UX Intern</h3>
-                        <p class="company">StealthEra (Startup)</p>
-                        <ul class="experience-details">
-                            <li>Conducted requirement analysis and designed intuitive user interfaces for mobile applications</li>
-                            <li>Developed technical documentation and high-fidelity prototypes for team alignment</li>
-                            <li>Collaborated with developers for seamless integration of application design</li>
-                            <li>Project link: Fitbit Mobile App UI</li>
-                        </ul>
-                    </div>
-                </section>
-
-                <!-- Projects Section -->
-                <section class="resume-section">
-                    <h2 class="section-title">
-                        <i class="fas fa-code"></i>
-                        Projects
-                    </h2>
-                    <div class="project-item">
-                        <h3>Meuro: A Meet Platform for 3D Artists</h3>
-                        <p class="project-description">Developed a platform similar to Google Meet but specialized for 3D artists and CAD artists. Used Three.js as the main library to enhance the platform.</p>
-                    </div>
-                    <div class="project-item">
-                        <h3>Synthesizing Musical Sequences via Deep Neural Architectures</h3>
-                        <p class="project-description">Implemented a Long-Short Term Memory (LSTM) for sequence-based music generation. Optimized model performance and verified outputs using TensorFlow.</p>
-                    </div>
-                    <div class="project-item">
-                        <h3>Student Placement Package Prediction Model</h3>
-                        <p class="project-description">Developed a regression-based model with over 85% accuracy for predicting placement packages. Documented and tested the model using Python and Scikit-learn.</p>
-                    </div>
-                </section>
-
-                <!-- Certifications Section -->
-                <section class="resume-section">
-                    <h2 class="section-title">
-                        <i class="fas fa-certificate"></i>
-                        Certifications
-                    </h2>
-                    <div class="certification-item">
-                        <h4>Google AI-ML Virtual Internship</h4>
-                        <p class="cert-period">July - September 2024</p>
-                    </div>
-                    <div class="certification-item">
-                        <h4>Google Android Developer Virtual Internship</h4>
-                        <p class="cert-period">April - June 2024</p>
-                    </div>
-                    <div class="certification-item">
-                        <h4>Palo Alto Cybersecurity Virtual Internship</h4>
-                        <p class="cert-period">May - July 2023</p>
-                    </div>
-                </section>
-
-                <!-- Achievements Section -->
-                <section class="resume-section">
-                    <h2 class="section-title">
-                        <i class="fas fa-trophy"></i>
-                        Achievements
-                    </h2>
-                    <div class="achievement-item">
-                        <p>Published a research paper on Student Placement Package Prediction Using Regression Analysis</p>
-                    </div>
-                </section>
+            <div class="recent-interactions">
+              <h4>Recent Interactions</h4>
+              <div class="interaction"><span>Now</span><div>User viewing Projects</div></div>
+              <div class="interaction"><span>5m ago</span><div>Downloaded resume.pdf</div></div>
+              <div class="interaction"><span>12m ago</span><div>Viewed E-commerce Project</div></div>
             </div>
+          </div>
         </div>
-    </div>
+      </section>
 
-    <script src="script.js"></script>
+      <!-- Featured Project -->
+      <section class="featured card" id="projects" aria-labelledby="featuredTitle">
+        <div class="card-header">
+          <h3 id="featuredTitle"><i class="fas fa-star"></i> Featured Project — E-Commerce Dashboard</h3>
+        </div>
+        <div class="card-body project-showcase">
+          <div class="project-mockup" role="img" aria-label="Project screenshot mockup">
+            <div class="screen">
+              <div class="screen-inner">
+                <div class="mock-title">E-Commerce Dashboard</div>
+                <div class="mock-sub">Real-time analytics • Inventory management • Customer insights</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="project-info">
+            <p>A full-stack e-commerce platform with real-time analytics, inventory management, and customer insights dashboard. Built with React, Node.js, Express and MongoDB.</p>
+            <div class="tech-tags">
+              <span class="tag">React</span>
+              <span class="tag">Node.js</span>
+              <span class="tag">MongoDB</span>
+              <span class="tag">Express</span>
+            </div>
+
+            <div class="project-actions">
+              <a class="btn btn-primary" href="#"><i class="fab fa-github"></i> View Code</a>
+              <a class="btn btn-outline" href="#"><i class="fas fa-external-link-alt"></i> Live Demo</a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Footer -->
+      <footer class="footer" id="contact" role="contentinfo">
+        <div class="social">
+          <a href="#" aria-label="GitHub" class="social-link"><i class="fab fa-github"></i></a>
+          <a href="#" aria-label="LinkedIn" class="social-link"><i class="fab fa-linkedin"></i></a>
+          <a href="#" aria-label="Twitter" class="social-link"><i class="fab fa-twitter"></i></a>
+          <a href="#" aria-label="Dev.to" class="social-link"><i class="fab fa-dev"></i></a>
+          <a href="mailto:vaibhav06734@gmail.com" aria-label="Email" class="social-link"><i class="fas fa-envelope"></i></a>
+        </div>
+        <div class="copyright">© <span id="year"></span> Vaibhav Srivastava — All rights reserved.</div>
+      </footer>
+    </main>
+  </div>
+
+  <script src="script.js" defer></script>
 </body>
 </html>

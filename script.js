@@ -1,264 +1,196 @@
-// Sidebar Toggle Functionality and All Other Features
-document.addEventListener('DOMContentLoaded', function() {
-    // Initialize all functionality
-    initializeSidebar();
-    setupDropdownFunctionality();
-    setupProfilePageNavigation();
-    setupRefreshButton();
-    simulateLiveAnalytics();
-    addHoverEffects();
-    loadSavedTheme();
+// Improved interactivity & animations
+document.addEventListener('DOMContentLoaded', () => {
+  initUI();
+  animateCounters();
+  setupSidebar();
+  setupTheme();
+  setupActivityRefresh();
+  setYear();
 });
 
-// Sidebar and Main Navigation
-function initializeSidebar() {
-    const sidebar = document.querySelector('.sidebar');
-    const sidebarToggle = document.querySelector('.sidebar-toggle');
-    const menuItems = document.querySelectorAll('.menu-item');
-    
-    // Toggle sidebar collapse
-    if (sidebarToggle) {
-        sidebarToggle.addEventListener('click', function() {
-            sidebar.classList.toggle('collapsed');
-        });
-    }
-    
-    // Menu item click handling
-    menuItems.forEach(item => {
-        item.addEventListener('click', function() {
-            // Remove active class from all items
-            menuItems.forEach(i => i.classList.remove('active'));
-            // Add active class to clicked item
-            this.classList.add('active');
-            
-            // Here you would typically load different content based on the menu item
-            console.log('Switching to:', this.querySelector('span').textContent);
-        });
+/* ---------------------------
+   Helper / small utilities
+   --------------------------- */
+function $(s) { return document.querySelector(s); }
+function $all(s) { return Array.from(document.querySelectorAll(s)); }
+
+/* ---------------------------
+   Year
+   --------------------------- */
+function setYear() {
+  const y = new Date().getFullYear();
+  const el = $('#year');
+  if (el) el.textContent = y;
+}
+
+/* ---------------------------
+   Counter animation for stats
+   --------------------------- */
+function animateCounters() {
+  const counters = $all('.stat-value, .stat-card .stat-value, .stat-value, .stat-value, .stat-value'); // backward safe
+  // Custom: our hero uses .stat-card .stat-value with data-target
+  const statNodes = $all('.stat-card .stat-value, .stat-value[data-target]');
+  statNodes.forEach(node => {
+    const target = parseInt(node.dataset.target || node.textContent || 0, 10) || 0;
+    node.textContent = '0';
+    animateNumber(node, target, 900);
+  });
+
+  // Also animate analytics mini numbers
+  const smalls = ['#visitors','#projectsViewed','#resumeDownloads','#skillsViews'];
+  smalls.forEach(id => {
+    const el = document.querySelector(id);
+    if (!el) return;
+    const target = parseInt(el.textContent || 0,10);
+    el.textContent = '0';
+    animateNumber(el, target, 1000 + Math.random()*800);
+  });
+}
+
+function animateNumber(el, end, duration = 1000) {
+  const start = 0;
+  const range = end - start;
+  const startTime = performance.now();
+  function step(now) {
+    const progress = Math.min((now - startTime) / duration, 1);
+    const eased = easeOutCubic(progress);
+    el.textContent = Math.floor(start + range * eased);
+    if (progress < 1) requestAnimationFrame(step);
+    else el.textContent = end;
+  }
+  requestAnimationFrame(step);
+}
+function easeOutCubic(t){ return 1 - Math.pow(1 - t, 3); }
+
+/* ---------------------------
+   Sidebar behaviour
+   --------------------------- */
+function setupSidebar() {
+  const sidebar = $('#sidebar');
+  const collapseBtn = $('#collapseBtn');
+  const menuItems = $all('.menu-item');
+  const mobileMenuBtn = $('#mobileMenuBtn');
+
+  collapseBtn?.addEventListener('click', () => {
+    sidebar.classList.toggle('collapsed');
+  });
+
+  menuItems.forEach(item => {
+    item.addEventListener('click', () => {
+      menuItems.forEach(i => i.classList.remove('active'));
+      item.classList.add('active');
+      // smooth section scroll if needed
+      const sec = item.dataset.section;
+      if (sec) {
+        const target = document.getElementById(sec);
+        if (target) target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
     });
-}
-
-// Profile Dropdown Functionality
-function setupDropdownFunctionality() {
-    const dropdownItems = document.querySelectorAll('.dropdown-item');
-    const themeStatus = document.querySelector('.theme-status');
-    
-    dropdownItems.forEach(item => {
-        item.addEventListener('click', function(e) {
-            e.preventDefault();
-            const action = this.getAttribute('data-action');
-            
-            switch(action) {
-                case 'profile':
-                    openProfilePage();
-                    break;
-                case 'theme':
-                    toggleTheme();
-                    break;
-                case 'exit':
-                    closePortfolio();
-                    break;
-            }
-        });
+    // keyboard accessible
+    item.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') item.click();
     });
-    
-    function toggleTheme() {
-        const body = document.body;
-        const isDark = body.classList.toggle('dark-theme');
-        
-        // Update theme status text
-        if (themeStatus) {
-            themeStatus.textContent = isDark ? 'Dark' : 'Light';
-        }
-        
-        // Update theme icon
-        const themeIcon = document.querySelector('[data-action="theme"] i');
-        if (themeIcon) {
-            themeIcon.className = isDark ? 'fas fa-sun' : 'fas fa-moon';
-        }
-        
-        // Save theme preference to localStorage
-        localStorage.setItem('theme', isDark ? 'dark' : 'light');
-        
-        console.log('Theme toggled to:', isDark ? 'Dark' : 'Light');
-    }
-    
-    function closePortfolio() {
-        if (confirm('Are you sure you want to close the portfolio?')) {
-            window.close();
-            // If window.close doesn't work (due to browser restrictions), provide alternative
-            console.log('Portfolio tab should close. If not, use browser close button.');
-        }
-    }
+  });
+
+  // Mobile toggle
+  mobileMenuBtn?.addEventListener('click', () => {
+    const main = document.querySelector('.main');
+    if (!sidebar) return;
+    // toggle a visible class for mobile
+    sidebar.style.display = (getComputedStyle(sidebar).display === 'none') ? 'flex' : 'none';
+    // shift main margin
+    main.style.marginLeft = (sidebar.style.display === 'flex') ? '240px' : '0';
+  });
 }
 
-// Profile Page Navigation
-function setupProfilePageNavigation() {
-    // Use event delegation for dynamic elements
-    document.addEventListener('click', function(e) {
-        // Back to Dashboard button
-        if (e.target.closest('.back-to-dashboard')) {
-            e.preventDefault();
-            closeProfilePage();
-        }
-        
-        // Download Resume button
-        if (e.target.closest('.download-resume')) {
-            e.preventDefault();
-            downloadResume();
-        }
+/* ---------------------------
+   Theme (persisted)
+   --------------------------- */
+function setupTheme() {
+  const saved = localStorage.getItem('theme');
+  if (saved === 'dark') document.body.classList.add('dark-theme');
+
+  const statusPill = document.querySelector('.theme-pill');
+  const icon = document.querySelector('[data-action="theme"] i') || null;
+  updateThemePill();
+
+  $('#themeToggle')?.addEventListener('click', () => {
+    document.body.classList.toggle('dark-theme');
+    localStorage.setItem('theme', document.body.classList.contains('dark-theme') ? 'dark' : 'light');
+    updateThemePill();
+  });
+
+  function updateThemePill(){
+    const isDark = document.body.classList.contains('dark-theme');
+    if (statusPill) statusPill.textContent = isDark ? 'Dark' : 'Light';
+    if (icon) icon.className = isDark ? 'fas fa-sun' : 'fas fa-moon';
+  }
+}
+
+/* ---------------------------
+   Activity refresh (UI nicety)
+   --------------------------- */
+function setupActivityRefresh() {
+  const btn = $('#refreshActivity');
+  const list = $('#activityList');
+  if (!btn || !list) return;
+  btn.addEventListener('click', () => {
+    btn.classList.add('rotating');
+    // simulate refresh: fade items and restore
+    $all('.activity').forEach((it, idx) => {
+      it.style.opacity = '0.45';
+      setTimeout(()=> it.style.opacity = '1', 250 + idx*80);
     });
+    setTimeout(()=> {
+      btn.classList.remove('rotating');
+      // simple visual confirmation
+      btn.innerHTML = '<i class="fas fa-check"></i>';
+      setTimeout(()=> btn.innerHTML = '<i class="fas fa-sync-alt"></i>', 800);
+      // also bump visitor counters slightly
+      bumpAnalytics();
+    }, 900);
+  });
 }
 
-function openProfilePage() {
-    // Hide main dashboard content
-    const mainContent = document.querySelector('.main-content');
-    const sidebar = document.querySelector('.sidebar');
-    const profilePage = document.getElementById('profilePage');
-    
-    if (mainContent) mainContent.style.display = 'none';
-    if (sidebar) sidebar.style.display = 'none';
-    if (profilePage) profilePage.classList.remove('hidden');
-    
-    console.log('Profile page opened');
+function bumpAnalytics(){
+  const visitors = $('#visitors');
+  const projects = $('#projectsViewed');
+  const resume = $('#resumeDownloads');
+  const skills = $('#skillsViews');
+
+  if (visitors) animateNumber(visitors, parseInt(visitors.textContent || 0,10) + Math.floor(Math.random()*3 + 1), 650);
+  if (projects) animateNumber(projects, parseInt(projects.textContent || 0,10) + Math.floor(Math.random()*2 + 1), 650);
+  if (resume) animateNumber(resume, parseInt(resume.textContent || 0,10) + Math.floor(Math.random()*2 + 1), 650);
+  if (skills) animateNumber(skills, parseInt(skills.textContent || 0,10) + Math.floor(Math.random()*2 + 1), 650);
 }
 
-function closeProfilePage() {
-    // Show main dashboard content
-    const mainContent = document.querySelector('.main-content');
-    const sidebar = document.querySelector('.sidebar');
-    const profilePage = document.getElementById('profilePage');
-    
-    if (mainContent) mainContent.style.display = 'block';
-    if (sidebar) sidebar.style.display = 'block';
-    if (profilePage) profilePage.classList.add('hidden');
-    
-    console.log('Returned to dashboard');
-}
+/* ---------------------------
+   General UI initializations
+   --------------------------- */
+function initUI(){
+  // rotating css for refresh
+  const css = document.createElement('style');
+  css.innerHTML = `
+    .rotating{animation:rotate .65s linear}
+    @keyframes rotate{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+    .icon-btn{background:transparent;border:0;cursor:pointer;padding:6px;border-radius:8px}
+    .icon-btn.small{padding:6px}
+  `;
+  document.head.appendChild(css);
 
-function downloadResume() {
-    // This would typically download your actual PDF resume
-    alert('This would download your Resume_4.pdf file');
-    console.log('Downloading resume...');
-    
-    // In a real implementation, you would use:
-    // const link = document.createElement('a');
-    // link.href = 'Resume_4.pdf';
-    // link.download = 'Vaibhav_Srivastava_Resume.pdf';
-    // document.body.appendChild(link);
-    // link.click();
-    // document.body.removeChild(link);
-}
-
-// Refresh Button Functionality
-function setupRefreshButton() {
-    const refreshBtn = document.querySelector('.refresh-btn');
-    if (refreshBtn) {
-        refreshBtn.addEventListener('click', function() {
-            this.classList.add('rotating');
-            setTimeout(() => {
-                this.classList.remove('rotating');
-                simulateDataRefresh();
-            }, 1000);
-        });
-    }
-}
-
-function simulateDataRefresh() {
-    const activityItems = document.querySelectorAll('.activity-item');
-    activityItems.forEach(item => {
-        item.style.opacity = '0.5';
-        setTimeout(() => {
-            item.style.opacity = '1';
-        }, 300);
+  // Accessibility helpers: close dropdown on outside click
+  document.addEventListener('click', (e) => {
+    const dropdowns = $all('.profile-dropdown');
+    dropdowns.forEach(dd => {
+      if (!dd.contains(e.target)) {
+        dd.querySelector('.dropdown-menu')?.classList.remove('open');
+      }
     });
-    
-    // Show refresh confirmation
-    const refreshBtn = document.querySelector('.refresh-btn');
-    if (refreshBtn) {
-        const originalHTML = refreshBtn.innerHTML;
-        refreshBtn.innerHTML = '<i class="fas fa-check"></i>';
-        setTimeout(() => {
-            refreshBtn.innerHTML = originalHTML;
-        }, 1000);
-    }
-}
+  });
 
-function simulateLiveAnalytics() {
-    const metricValue = document.querySelector('.metric-value');
-    const statValues = document.querySelectorAll('.stat-value');
-    
-    if (!metricValue) return;
-    
-    // Simulate visitor count increase
-    setInterval(() => {
-        const currentCount = parseInt(metricValue.textContent);
-        metricValue.textContent = currentCount + 1;
-        
-        // Randomly update other stats occasionally
-        if (Math.random() > 0.7) {
-            statValues.forEach(stat => {
-                const current = parseInt(stat.textContent);
-                stat.textContent = current + 1;
-            });
-        }
-    }, 5000); // Update every 5 seconds
+  // small entrance animations
+  setTimeout(()=> document.querySelectorAll('.card, .hero, .featured').forEach((el, i) => {
+    el.style.opacity = 0; el.style.transform = 'translateY(8px)';
+    setTimeout(()=> { el.style.transition = 'all .45s ease'; el.style.opacity = 1; el.style.transform = 'translateY(0)'; }, 80 + i*80);
+  }), 220);
 }
-
-function addHoverEffects() {
-    // Add subtle animations to metric cards
-    const metricCards = document.querySelectorAll('.metric-card');
-    metricCards.forEach(card => {
-        card.addEventListener('mouseenter', function() {
-            this.style.transform = 'translateY(-5px)';
-        });
-        
-        card.addEventListener('mouseleave', function() {
-            this.style.transform = 'translateY(0)';
-        });
-    });
-    
-    // Add click effects to buttons
-    const buttons = document.querySelectorAll('.btn');
-    buttons.forEach(button => {
-        button.addEventListener('click', function() {
-            this.style.transform = 'scale(0.95)';
-            setTimeout(() => {
-                this.style.transform = 'scale(1)';
-            }, 150);
-        });
-    });
-}
-
-function loadSavedTheme() {
-    const savedTheme = localStorage.getItem('theme');
-    const themeStatus = document.querySelector('.theme-status');
-    const themeIcon = document.querySelector('[data-action="theme"] i');
-    
-    if (savedTheme === 'dark') {
-        document.body.classList.add('dark-theme');
-        if (themeStatus) themeStatus.textContent = 'Dark';
-        if (themeIcon) themeIcon.className = 'fas fa-sun';
-    }
-}
-
-// Add CSS for rotating animation
-const style = document.createElement('style');
-style.textContent = `
-    .rotating {
-        animation: rotate 0.5s ease-in-out;
-    }
-    
-    @keyframes rotate {
-        from { transform: rotate(0deg); }
-        to { transform: rotate(360deg); }
-    }
-    
-    .metric-card, .card, .btn {
-        transition: all 0.3s ease;
-    }
-    
-    .hidden {
-        display: none !important;
-    }
-`;
-document.head.appendChild(style);
